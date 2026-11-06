@@ -8,7 +8,7 @@ on:
 jobs:
   build-ios:
     name: Build iOS arm64
-    runs-on: macos-14
+    runs-on: macos-15
     steps:
       - name: Baixar código
         uses: actions/checkout@v4
