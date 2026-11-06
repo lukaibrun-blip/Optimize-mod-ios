@@ -16,8 +16,8 @@ jobs:
       - name: Compilar com Geode SDK
         uses: geode-sdk/build-geode-mod@main
         with:
-          platform: ios
-          architecture: arm64
+          target: iOS
+          sdk: given
           build-config: Release
 
       - name: Publicar artefato
