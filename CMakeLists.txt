@@ -11,8 +11,8 @@ add_library(${PROJECT_NAME} SHARED
 target_include_directories(${PROJECT_NAME} PRIVATE src)
 
 if (NOT DEFINED ENV{GEODE_SDK_PATH})
-    message(FATAL_ERROR "GEODE_SDK_PATH não foi definido. Use o SDK do Geode para compilar para iOS arm64.")
+    message(FATAL_ERROR "GEODE_SDK_PATH não foi definido. Verifique se o build-geode-mod usa target: iOS.")
 endif()
 
-add_subdirectory($ENV{GEODE_SDK_PATH} geode)
+add_subdirectory($ENV{GEODE_SDK_PATH} ${CMAKE_BINARY_DIR}/geode)
 setup_geode_mod(${PROJECT_NAME})
