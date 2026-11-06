@@ -1,0 +1,28 @@
+name: Build Geode iOS arm64
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+
+jobs:
+  build-ios:
+    name: Build iOS arm64
+    runs-on: macos-14
+    steps:
+      - name: Baixar código
+        uses: actions/checkout@v4
+
+      - name: Compilar com Geode SDK
+        uses: geode-sdk/build-geode-mod@main
+        with:
+          platform: ios
+          architecture: arm64
+          build-config: Release
+
+      - name: Publicar artefato
+        uses: actions/upload-artifact@v4
+        with:
+          name: ios-optimization-geode-ios-arm64
+          path: build/*.geode
+          if-no-files-found: error
