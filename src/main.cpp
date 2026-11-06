@@ -9,6 +9,24 @@ namespace {
         return Mod::get()->getSettingValue<bool>(key);
     }
 
+    void releaseUnusedResources() {
+        if (!setting("low-memory")) {
+            return;
+        }
+
+        CCTextureCache::sharedTextureCache()->removeUnusedTextures();
+        CCSpriteFrameCache::sharedSpriteFrameCache()->removeUnusedSpriteFrames();
+    }
+
+    void applyFramePacing() {
+        if (!setting("stable-fps")) {
+            return;
+        }
+
+        auto director = CCDirector::sharedDirector();
+        director->setAnimationInterval(1.0 / 120.0);
+    }
+
     class OptimizationPopup final : public FLAlertLayer {
     protected:
         bool init() {
@@ -20,7 +38,7 @@ namespace {
             auto panel = CCScale9Sprite::create("GJ_square05.png");
             panel->setContentSize({270.f, 170.f});
             panel->setPosition(winSize / 2);
-            this->m_mainLayer->addChild(panel);
+            m_mainLayer->addChild(panel);
 
             auto title = CCLabelBMFont::create("iOS Optimization", "goldFont.fnt");
             title->setScale(.65f);
@@ -28,34 +46,26 @@ namespace {
             panel->addChild(title);
 
             auto info = CCLabelBMFont::create(
-                "As opções são aplicadas com segurança\n"
-                "e funcionam somente no iOS 2.2081.",
+                "Otimizações ativas nesta sessão:\n"
+                "frame pacing e limpeza de memória.",
                 "chatFont.fnt"
             );
             info->setAlignment(kCCTextAlignmentCenter);
             info->setScale(.42f);
-            info->setPosition({135.f, 116.f});
+            info->setPosition({135.f, 108.f});
             panel->addChild(info);
 
             auto status = CCLabelBMFont::create(
-                fmt::format("FPS estável: {}\nEfeitos reduzidos: {}\nPouca memória: {}",
+                fmt::format("FPS estável: {}\nEfeitos: {}\nPouca memória: {}",
                     setting("stable-fps") ? "ON" : "OFF",
-                    setting("reduce-effects") ? "ON" : "OFF",
+                    setting("reduce-effects") ? "REDUZIDOS" : "PADRÃO",
                     setting("low-memory") ? "ON" : "OFF").c_str(),
                 "chatFont.fnt"
             );
             status->setAlignment(kCCTextAlignmentCenter);
             status->setScale(.48f);
-            status->setPosition({135.f, 68.f});
+            status->setPosition({135.f, 58.f});
             panel->addChild(status);
-
-            auto hint = CCLabelBMFont::create(
-                "Altere as opções pelo menu de configurações do Geode.",
-                "chatFont.fnt"
-            );
-            hint->setScale(.38f);
-            hint->setPosition({135.f, 28.f});
-            panel->addChild(hint);
             return true;
         }
 
@@ -106,9 +116,14 @@ class $modify(OptimizationPlayLayer, PlayLayer) {
             return false;
         }
 
+        applyFramePacing();
         return true;
     }
 
+    void onExit() {
+        PlayLayer::onExit();
+        releaseUnusedResources();
+    }
 };
 
 $on_mod(Loaded) {
