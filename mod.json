@@ -1,0 +1,32 @@
+{
+  "geode": "4.0.0",
+  "version": "1.0.0",
+  "id": "ios.optimization",
+  "name": "iOS Optimization",
+  "developer": "Lukaibrun",
+  "description": "Otimizações seguras para Geometry Dash 2.2081 no iOS.",
+  "repository": "https://github.com/lukaibrun-blip/ios-optimization",
+  "gd": {
+    "ios": "2.2081"
+  },
+  "settings": {
+    "reduce-effects": {
+      "name": "Reduzir efeitos",
+      "description": "Reduz efeitos visuais opcionais durante as fases.",
+      "type": "bool",
+      "default": true
+    },
+    "low-memory": {
+      "name": "Modo pouca memória",
+      "description": "Libera recursos temporários quando uma fase termina.",
+      "type": "bool",
+      "default": true
+    },
+    "stable-fps": {
+      "name": "FPS estável",
+      "description": "Ativa ajustes seguros para reduzir oscilações de frame time.",
+      "type": "bool",
+      "default": true
+    }
+  }
+}
